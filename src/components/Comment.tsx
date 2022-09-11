@@ -1,6 +1,9 @@
+import { useMemo } from "react";
 import styled from "styled-components";
 
 import { ScoreTicker, Avatar, ReplyButton, AvatarUsername } from ".";
+import { useAppSelector } from "../redux/hooks";
+import { DeleteButton, EditButton } from "./Buttons";
 
 interface CommentProps {
   comment: CommentType;
@@ -15,7 +18,7 @@ const CommentWrapper = styled.div<{ isReply: boolean }>`
   border-radius: 8px;
   margin-bottom: 20px;
   background-color: var(--white);
-  width: ${(props) => (props.isReply ? "500px" : "600px")};
+  width: ${(props) => (props.isReply ? "600px" : "700px")};
   height: 180px;
 
   .username {
@@ -38,8 +41,9 @@ const CommentWrapper = styled.div<{ isReply: boolean }>`
     justify-content: space-between;
     width: 100%;
 
-    button {
+    .buttons {
       margin-left: auto;
+      display: flex;
     }
   }
 
@@ -55,9 +59,29 @@ const CommentWrapper = styled.div<{ isReply: boolean }>`
     font-weight: 500;
     margin-right: 5px;
   }
+
+  .you-tag {
+    background-color: var(--moderate-blue);
+    color: var(--white);
+    height: 20px;
+    width: 40px;
+    border-radius: 3px;
+    padding: 0 8px;
+    margin-right: 10px;
+    font-size: 14px;
+  }
 `;
 
 export default function Comment({ comment, isReply = false }: CommentProps) {
+  const { username: currentUsername } = useAppSelector(
+    (state) => state.state.currentUser
+  );
+
+  const isCurrentUser = useMemo(
+    (): boolean => currentUsername === comment.user.username,
+    [currentUsername, comment.user.username]
+  );
+
   return (
     <>
       <CommentWrapper isReply={isReply}>
@@ -66,8 +90,18 @@ export default function Comment({ comment, isReply = false }: CommentProps) {
           <div className="header">
             <Avatar username={comment.user.username as AvatarUsername} small />
             <div className="username">{comment.user.username}</div>
+            {isCurrentUser && <div className="you-tag">you</div>}
             <div className="createdAt">{comment.createdAt}</div>
-            <ReplyButton />
+            <div className="buttons">
+              {isCurrentUser ? (
+                <>
+                  <DeleteButton />
+                  <EditButton />
+                </>
+              ) : (
+                <ReplyButton />
+              )}
+            </div>
           </div>
           <div className="content">
             {comment.replyingTo && (

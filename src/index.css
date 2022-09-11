@@ -14,12 +14,12 @@
 body {
   margin: 0;
   padding: 20px;
-  font-family: "Rubik", sans-serif;
   background: var(--very-light-gray);
 }
 
 * {
   box-sizing: border-box;
+  font-family: "Rubik", sans-serif;
 }
 
 .App {
