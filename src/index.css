@@ -2,7 +2,6 @@
   --moderate-blue: hsl(238, 40%, 52%);
   --moderate-blue-hover: hsl(238, 40%, 60%);
   --soft-red: hsl(358, 79%, 66%);
-  --soft-red-hover: hsl(358, 79%, 74%);
   --light-grayish-blue: hsl(239, 57%, 85%);
   --pale-red: hsl(357, 100%, 86%);
   --dark-blue: hsl(212, 24%, 26%);
@@ -14,7 +13,6 @@
 
 body {
   margin: 0;
-  padding: 20px;
   background: var(--very-light-gray);
 }
 
@@ -30,7 +28,8 @@ body {
   justify-content: center;
   height: auto;
   min-height: 100vh;
-  width: 100%;
+  width: 100vw;
+  padding: 20px;
 }
 
 .replies {
@@ -38,9 +37,13 @@ body {
   flex-direction: column;
   border-left: 3px solid var(--light-gray);
   background-color: var(--very-light-gray);
-  padding-left: 45px;
+  padding-left: 48px;
   margin-top: 20px;
   margin-left: 50px;
+}
+
+.comments {
+  width: fit-content;
 }
 
 .attribution {
@@ -50,4 +53,11 @@ body {
 }
 .attribution a {
   color: hsl(228, 45%, 44%);
+}
+
+@media screen and (max-width: 475px) {
+  .replies {
+    padding-left: 10px;
+    margin-left: 5px;
+  }
 }

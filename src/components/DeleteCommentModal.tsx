@@ -42,6 +42,10 @@ const ModalBody = styled.div`
     display: flex;
     justify-content: space-between;
   }
+
+  @media (max-width: 475px) {
+    width: 95%;
+  }
 `;
 
 export default function Modal({

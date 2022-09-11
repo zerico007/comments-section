@@ -34,6 +34,16 @@ const StyledTicker = styled.div`
       scale: 1.3;
     }
   }
+
+  @media (max-width: 475px) {
+    width: 80px;
+    height: 28px;
+    flex-direction: row;
+
+    img {
+      width: 20%;
+    }
+  }
 `;
 
 export default function ScoreTicker({ commentId, score }: ScoreTickerProps) {

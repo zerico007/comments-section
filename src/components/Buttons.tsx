@@ -42,7 +42,7 @@ const styles = {
     text-transform: uppercase;
 
     :hover {
-      background-color: var(--soft-red-hover);
+      background-color: var(--pale-red);
     }
   `,
 };

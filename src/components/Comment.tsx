@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { ScoreTicker, Avatar, ReplyButton, AvatarUsername } from ".";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { deleteComment } from "../redux/state";
+import { useMobile } from "../context";
 import { DeleteButton, EditButton, AddComment, DeleteCommentModal } from ".";
 
 interface CommentProps {
@@ -36,17 +37,18 @@ const CommentWrapper = styled.div<{ isReply: boolean }>`
     font-weight: 400;
   }
 
+  .buttons {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+
   .header {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
     justify-content: space-between;
     width: 100%;
-
-    .buttons {
-      margin-left: auto;
-      display: flex;
-    }
   }
 
   .body {
@@ -72,6 +74,36 @@ const CommentWrapper = styled.div<{ isReply: boolean }>`
     margin-right: 10px;
     font-size: 14px;
   }
+
+  @media (max-width: 475px) {
+    width: 90%;
+    flex-direction: column;
+    padding: 10px;
+
+    .header {
+      justify-content: flex-start;
+    }
+
+    .body {
+      margin-left: 0;
+    }
+
+    .content {
+      margin-bottom: 10px;
+    }
+
+    .username,
+    .createdAt,
+    .content,
+    .you-tag {
+      font-size: 13px;
+    }
+
+    .buttons {
+      width: 100%;
+      justify-content: space-between;
+    }
+  }
 `;
 
 export default function Comment({
@@ -83,6 +115,7 @@ export default function Comment({
     (state) => state.state.currentUser
   );
   const dispatch = useAppDispatch();
+  const { isMobile } = useMobile();
 
   const [openReply, setOpenReply] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -107,23 +140,27 @@ export default function Comment({
         />
       )}
       <CommentWrapper isReply={isReply}>
-        <ScoreTicker commentId={comment.id} score={comment.score} />
+        {!isMobile && (
+          <ScoreTicker commentId={comment.id} score={comment.score} />
+        )}
         <div className="body">
           <div className="header">
             <Avatar username={comment.user.username as AvatarUsername} small />
             <div className="username">{comment.user.username}</div>
             {isCurrentUser && <div className="you-tag">you</div>}
             <div className="createdAt">{comment.createdAt}</div>
-            <div className="buttons">
-              {isCurrentUser ? (
-                <>
-                  <DeleteButton onClick={() => setOpenDeleteModal(true)} />
-                  <EditButton onClick={() => setOpenEdit(!openEdit)} />
-                </>
-              ) : (
-                <ReplyButton onClick={() => setOpenReply(!openReply)} />
-              )}
-            </div>
+            {!isMobile && (
+              <div className="buttons">
+                {isCurrentUser ? (
+                  <>
+                    <DeleteButton onClick={() => setOpenDeleteModal(true)} />
+                    <EditButton onClick={() => setOpenEdit(!openEdit)} />
+                  </>
+                ) : (
+                  <ReplyButton onClick={() => setOpenReply(!openReply)} />
+                )}
+              </div>
+            )}
           </div>
           <div className="content">
             {openEdit ? (
@@ -143,6 +180,25 @@ export default function Comment({
               </>
             )}
           </div>
+          {isMobile && (
+            <div className="buttons">
+              <ScoreTicker commentId={comment.id} score={comment.score} />
+              {isCurrentUser ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    marginLeft: "auto",
+                  }}
+                >
+                  <DeleteButton onClick={() => setOpenDeleteModal(true)} />
+                  <EditButton onClick={() => setOpenEdit(!openEdit)} />
+                </div>
+              ) : (
+                <ReplyButton onClick={() => setOpenReply(!openReply)} />
+              )}
+            </div>
+          )}
         </div>
       </CommentWrapper>
       {openReply && (
