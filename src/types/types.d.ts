@@ -6,17 +6,17 @@ interface User {
   username: string;
 }
 
-interface Comment {
+interface CommentType {
   id: number;
   content: string;
   createdAt: string;
   score: number;
   replyingTo?: string;
   user: User;
-  replies: Comment[];
+  replies: CommentType[];
 }
 
 interface State {
   currentUser: User;
-  comments: Comment[];
+  comments: CommentType[];
 }

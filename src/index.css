@@ -15,7 +15,29 @@ body {
   margin: 0;
   padding: 20px;
   font-family: "Rubik", sans-serif;
-  background: var(--light-gray);
+  background: var(--very-light-gray);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.replies {
+  display: flex;
+  flex-direction: column;
+  border-left: 3px solid var(--light-gray);
+  background-color: var(--very-light-gray);
+  padding-left: 45px;
+  margin-top: 20px;
+  margin-left: 50px;
 }
 
 code {

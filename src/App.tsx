@@ -1,12 +1,9 @@
-import { Button, DeleteButton, EditButton, ReplyButton } from "./components";
+import { Comments } from "./components";
 
 function App() {
   return (
     <div className="App">
-      <Button theme="primary" content="send" />
-      <ReplyButton />
-      <EditButton />
-      <DeleteButton />
+      <Comments />
     </div>
   );
 }

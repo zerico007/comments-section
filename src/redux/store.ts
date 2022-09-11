@@ -13,5 +13,8 @@ export type AppDispatch = typeof store.dispatch;
 
 store.subscribe(() => {
   sessionStorage.clear();
-  sessionStorage.setItem("commentState", JSON.stringify(store.getState()));
+  sessionStorage.setItem(
+    "commentState",
+    JSON.stringify(store.getState().state)
+  );
 });
