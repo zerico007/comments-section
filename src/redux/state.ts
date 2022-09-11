@@ -5,16 +5,18 @@ const initialAppState = sessionStorage.commentState
   ? JSON.parse(sessionStorage.commentState)
   : initialState;
 
-export function getComment(state: State, commentId: number) {
-  for (const comment of state.comments) {
+export function getComment(
+  comments: CommentType[],
+  commentId: number
+): CommentType | null {
+  for (const comment of comments) {
     if (comment.id === commentId) {
       return comment;
     }
-    if (!!comment.replies.length) {
-      for (const reply of comment.replies) {
-        if (reply.id === commentId) {
-          return reply;
-        }
+    if (comment.replies.length > 0) {
+      const innerComment = getComment(comment.replies, commentId);
+      if (innerComment) {
+        return innerComment;
       }
     }
   }
@@ -37,7 +39,10 @@ const slice = createSlice({
       action: PayloadAction<{ isReply: boolean; id: number; parentId?: number }>
     ) => {
       if (action.payload.isReply) {
-        const comment = getComment(state, action.payload.parentId as number);
+        const comment = getComment(
+          state.comments,
+          action.payload.parentId as number
+        );
         if (comment) {
           comment.replies = comment.replies.filter(
             (reply) => reply.id !== action.payload.id
@@ -53,24 +58,26 @@ const slice = createSlice({
       state: State,
       action: PayloadAction<{ id: number; content: string }>
     ) => {
-      const comment = getComment(state, action.payload.id);
+      const comment = getComment(state.comments, action.payload.id);
       if (comment) comment.content = action.payload.content;
     },
     addReply: (
       state: State,
       action: PayloadAction<{ commentToAdd: CommentType; id: number }>
     ) => {
-      const comment = getComment(state, action.payload.id);
-      console.log(action.payload.id);
-      if (comment) comment.replies.push(action.payload.commentToAdd);
+      const comment = getComment(state.comments, action.payload.id);
+      if (comment) {
+        comment.replies.push(action.payload.commentToAdd);
+        state.lastId = action.payload.commentToAdd.id;
+      }
     },
     incrementScore: (state: State, action: PayloadAction<number>) => {
-      const comment = getComment(state, action.payload);
+      const comment = getComment(state.comments, action.payload);
       if (comment) comment.score++;
     },
     decrementScore: (state: State, action: PayloadAction<number>) => {
-      const comment = getComment(state, action.payload);
-      if (comment) comment.score--;
+      const comment = getComment(state.comments, action.payload);
+      if (comment && comment.score !== 0) comment.score--;
     },
   },
 });

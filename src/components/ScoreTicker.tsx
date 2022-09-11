@@ -1,11 +1,12 @@
 import styled from "styled-components";
 
 import { Icon } from ".";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { decrementScore, getComment, incrementScore } from "../redux/state";
+import { useAppDispatch } from "../redux/hooks";
+import { decrementScore, incrementScore } from "../redux/state";
 
 interface ScoreTickerProps {
   commentId: number;
+  score: number;
 }
 
 const StyledTicker = styled.div`
@@ -27,6 +28,7 @@ const StyledTicker = styled.div`
   img {
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    width: 80%;
 
     :hover {
       scale: 1.3;
@@ -34,9 +36,8 @@ const StyledTicker = styled.div`
   }
 `;
 
-export default function ScoreTicker({ commentId }: ScoreTickerProps) {
+export default function ScoreTicker({ commentId, score }: ScoreTickerProps) {
   const dispatch = useAppDispatch();
-  const comment = useAppSelector((state) => getComment(state.state, commentId));
 
   return (
     <StyledTicker>
@@ -44,7 +45,7 @@ export default function ScoreTicker({ commentId }: ScoreTickerProps) {
         name="plusIcon"
         onClick={() => dispatch(incrementScore(commentId))}
       />
-      <span>{comment?.score ?? 0}</span>
+      <span>{score}</span>
       <Icon
         name="minusIcon"
         onClick={() => dispatch(decrementScore(commentId))}

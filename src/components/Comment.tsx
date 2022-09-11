@@ -98,7 +98,7 @@ export default function Comment({
   return (
     <>
       <CommentWrapper isReply={isReply}>
-        <ScoreTicker commentId={comment.id} />
+        <ScoreTicker commentId={comment.id} score={comment.score} />
         <div className="body">
           <div className="header">
             <Avatar username={comment.user.username as AvatarUsername} small />
