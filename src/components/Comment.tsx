@@ -2,12 +2,14 @@ import { useMemo } from "react";
 import styled from "styled-components";
 
 import { ScoreTicker, Avatar, ReplyButton, AvatarUsername } from ".";
-import { useAppSelector } from "../redux/hooks";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { deleteComment } from "../redux/state";
 import { DeleteButton, EditButton } from "./Buttons";
 
 interface CommentProps {
   comment: CommentType;
   isReply?: boolean;
+  parentId?: number;
 }
 
 const CommentWrapper = styled.div<{ isReply: boolean }>`
@@ -72,15 +74,24 @@ const CommentWrapper = styled.div<{ isReply: boolean }>`
   }
 `;
 
-export default function Comment({ comment, isReply = false }: CommentProps) {
+export default function Comment({
+  comment,
+  isReply = false,
+  parentId,
+}: CommentProps) {
   const { username: currentUsername } = useAppSelector(
     (state) => state.state.currentUser
   );
+  const dispatch = useAppDispatch();
 
   const isCurrentUser = useMemo(
     (): boolean => currentUsername === comment.user.username,
     [currentUsername, comment.user.username]
   );
+
+  const handleDelete = (isReply: boolean) => {
+    dispatch(deleteComment({ isReply, id: comment.id, parentId }));
+  };
 
   return (
     <>
@@ -95,7 +106,7 @@ export default function Comment({ comment, isReply = false }: CommentProps) {
             <div className="buttons">
               {isCurrentUser ? (
                 <>
-                  <DeleteButton />
+                  <DeleteButton onClick={() => handleDelete(isReply)} />
                   <EditButton />
                 </>
               ) : (
@@ -114,7 +125,12 @@ export default function Comment({ comment, isReply = false }: CommentProps) {
       {comment.replies?.length > 0 && (
         <div className="replies">
           {comment.replies.map((reply) => (
-            <Comment key={reply.id} comment={reply} isReply />
+            <Comment
+              key={reply.id}
+              parentId={comment.id}
+              comment={reply}
+              isReply
+            />
           ))}
         </div>
       )}

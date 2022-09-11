@@ -1,9 +1,5 @@
 interface User {
-  image: {
-    png: string;
-    webp: string;
-  };
-  username: string;
+  username: AvatarUsername;
 }
 
 interface CommentType {
@@ -18,5 +14,6 @@ interface CommentType {
 
 interface State {
   currentUser: User;
+  lastId: number;
   comments: CommentType[];
 }

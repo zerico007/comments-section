@@ -1,11 +1,8 @@
 const initialState = {
   currentUser: {
-    image: {
-      png: "../images/avatars/image-juliusomo.png",
-      webp: "../images/avatars/image-juliusomo.webp",
-    },
     username: "juliusomo",
   },
+  lastId: 4,
   comments: [
     {
       id: 1,
@@ -14,10 +11,6 @@ const initialState = {
       createdAt: "1 month ago",
       score: 12,
       user: {
-        image: {
-          png: "../images/avatars/image-amyrobson.png",
-          webp: "../images/avatars/image-amyrobson.webp",
-        },
         username: "amyrobson",
       },
       replies: [],
@@ -29,10 +22,6 @@ const initialState = {
       createdAt: "2 weeks ago",
       score: 5,
       user: {
-        image: {
-          png: "../images/avatars/image-maxblagun.png",
-          webp: "../images/avatars/image-maxblagun.webp",
-        },
         username: "maxblagun",
       },
       replies: [
@@ -44,10 +33,6 @@ const initialState = {
           score: 4,
           replyingTo: "maxblagun",
           user: {
-            image: {
-              png: "../images/avatars/image-ramsesmiron.png",
-              webp: "../images/avatars/image-ramsesmiron.webp",
-            },
             username: "ramsesmiron",
           },
         },
@@ -59,10 +44,6 @@ const initialState = {
           score: 2,
           replyingTo: "ramsesmiron",
           user: {
-            image: {
-              png: "../images/avatars/image-juliusomo.png",
-              webp: "../images/avatars/image-juliusomo.webp",
-            },
             username: "juliusomo",
           },
         },

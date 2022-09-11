@@ -25,36 +25,49 @@ const slice = createSlice({
   name: "comments",
   initialState: initialAppState,
   reducers: {
-    setCurrentUser: (state, action: PayloadAction<User>) => {
+    setCurrentUser: (state: State, action: PayloadAction<User>) => {
       state.currentUser = action.payload;
     },
-    addComment: (state, action: PayloadAction<Comment>) => {
+    addComment: (state: State, action: PayloadAction<CommentType>) => {
       state.comments.push(action.payload);
+      state.lastId = action.payload.id;
     },
-    deleteComment: (state, action: PayloadAction<number>) => {
-      state.comments = state.comments.filter(
-        (comment: CommentType) => comment.id !== action.payload
-      );
+    deleteComment: (
+      state: State,
+      action: PayloadAction<{ isReply: boolean; id: number; parentId?: number }>
+    ) => {
+      if (action.payload.isReply) {
+        const comment = getComment(state, action.payload.parentId as number);
+        if (comment) {
+          comment.replies = comment.replies.filter(
+            (reply) => reply.id !== action.payload.id
+          );
+        }
+      } else {
+        state.comments = state.comments.filter(
+          (comment) => comment.id !== action.payload.id
+        );
+      }
     },
     editCommment: (
-      state,
+      state: State,
       action: PayloadAction<{ id: number; content: string }>
     ) => {
       const comment = getComment(state, action.payload.id);
       if (comment) comment.content = action.payload.content;
     },
     addReply: (
-      state,
+      state: State,
       action: PayloadAction<{ comment: CommentType; id: number }>
     ) => {
       const comment = getComment(state, action.payload.comment.id);
       if (comment) comment.replies.push(action.payload.comment);
     },
-    incrementScore: (state, action: PayloadAction<number>) => {
+    incrementScore: (state: State, action: PayloadAction<number>) => {
       const comment = getComment(state, action.payload);
       if (comment) comment.score++;
     },
-    decrementScore: (state, action: PayloadAction<number>) => {
+    decrementScore: (state: State, action: PayloadAction<number>) => {
       const comment = getComment(state, action.payload);
       if (comment) comment.score--;
     },

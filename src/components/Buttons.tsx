@@ -59,9 +59,16 @@ export function Button({ theme, content, ...props }: ButtonProps) {
   );
 }
 
-const ActionButton = ({ action }: { action: "Reply" | "Edit" | "Delete" }) => {
+const ActionButton = ({
+  action,
+  onClick,
+}: {
+  action: "Reply" | "Edit" | "Delete";
+  onClick?: () => void;
+}) => {
   return (
     <Button
+      onClick={onClick}
       theme="secondary"
       content={
         <div
@@ -81,6 +88,12 @@ const ActionButton = ({ action }: { action: "Reply" | "Edit" | "Delete" }) => {
   );
 };
 
-export const ReplyButton = () => <ActionButton action="Reply" />;
-export const EditButton = () => <ActionButton action="Edit" />;
-export const DeleteButton = () => <ActionButton action="Delete" />;
+export const ReplyButton = ({ onClick }: { onClick?: () => void }) => (
+  <ActionButton onClick={onClick} action="Reply" />
+);
+export const EditButton = ({ onClick }: { onClick?: () => void }) => (
+  <ActionButton onClick={onClick} action="Edit" />
+);
+export const DeleteButton = ({ onClick }: { onClick?: () => void }) => (
+  <ActionButton onClick={onClick} action="Delete" />
+);
