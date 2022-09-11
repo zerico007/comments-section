@@ -35,6 +35,7 @@ const initialState = {
           user: {
             username: "ramsesmiron",
           },
+          replies: [],
         },
         {
           id: 4,
@@ -46,6 +47,7 @@ const initialState = {
           user: {
             username: "juliusomo",
           },
+          replies: [],
         },
       ],
     },

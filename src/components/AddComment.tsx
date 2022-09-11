@@ -3,12 +3,14 @@ import styled from "styled-components";
 
 import { Avatar, AvatarUsername, TextBox, Button } from ".";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { addComment } from "../redux/state";
+import { addComment, addReply } from "../redux/state";
 
 interface AddCommentProps {
   isReply: boolean;
   username: AvatarUsername;
   replyingTo?: AvatarUsername;
+  parentId?: number;
+  handleClose?: () => void;
 }
 
 const Wrapper = styled.div<{ isReply: boolean }>`
@@ -18,7 +20,8 @@ const Wrapper = styled.div<{ isReply: boolean }>`
   min-height: 180px;
   padding: 20px;
   border-radius: 8px;
-  margin-top: ${(props) => (props.isReply ? "10px" : "20px")};
+  margin-top: ${(props) => (props.isReply ? "0" : "20px")};
+  margin-bottom: 20px;
   background-color: var(--white);
 `;
 
@@ -26,6 +29,8 @@ export default function AddComment({
   isReply,
   username,
   replyingTo,
+  parentId = 0,
+  handleClose,
 }: AddCommentProps) {
   const dispatch = useAppDispatch();
   const lastId = useAppSelector((state) => state.state.lastId);
@@ -41,18 +46,27 @@ export default function AddComment({
     setText(e.target.value);
   };
 
-  const handleAddComment = () => {
+  const handleAddComment = (isReply: boolean) => {
     const commentToAdd: CommentType = {
       id: lastId + 1,
       user: {
         username,
       },
-      content: text,
+      content: text
+        .split(" ")
+        .filter((word) => !word.startsWith("@"))
+        .join(" "),
       replies: [],
       createdAt: "Just now",
       score: 0,
+      replyingTo,
     };
-    dispatch(addComment(commentToAdd));
+    if (isReply) {
+      dispatch(addReply({ commentToAdd, id: parentId }));
+      handleClose?.();
+    } else {
+      dispatch(addComment(commentToAdd));
+    }
     setText("");
   };
 
@@ -61,12 +75,9 @@ export default function AddComment({
       <Avatar username={username} />
       <TextBox value={text} onChange={handleChange} />
       <Button
-        theme={isReply ? "secondary" : "primary"}
+        theme="primary"
         content={isReply ? "Reply" : "Send"}
-        onClick={() => {
-          if (isReply) return;
-          handleAddComment();
-        }}
+        onClick={() => handleAddComment(isReply)}
       />
     </Wrapper>
   );

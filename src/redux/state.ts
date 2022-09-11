@@ -58,10 +58,11 @@ const slice = createSlice({
     },
     addReply: (
       state: State,
-      action: PayloadAction<{ comment: CommentType; id: number }>
+      action: PayloadAction<{ commentToAdd: CommentType; id: number }>
     ) => {
-      const comment = getComment(state, action.payload.comment.id);
-      if (comment) comment.replies.push(action.payload.comment);
+      const comment = getComment(state, action.payload.id);
+      console.log(action.payload.id);
+      if (comment) comment.replies.push(action.payload.commentToAdd);
     },
     incrementScore: (state: State, action: PayloadAction<number>) => {
       const comment = getComment(state, action.payload);

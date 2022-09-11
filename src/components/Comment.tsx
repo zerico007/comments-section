@@ -1,10 +1,10 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import styled from "styled-components";
 
 import { ScoreTicker, Avatar, ReplyButton, AvatarUsername } from ".";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { deleteComment } from "../redux/state";
-import { DeleteButton, EditButton } from "./Buttons";
+import { DeleteButton, EditButton, AddComment } from ".";
 
 interface CommentProps {
   comment: CommentType;
@@ -84,6 +84,8 @@ export default function Comment({
   );
   const dispatch = useAppDispatch();
 
+  const [openReply, setOpenReply] = useState(false);
+
   const isCurrentUser = useMemo(
     (): boolean => currentUsername === comment.user.username,
     [currentUsername, comment.user.username]
@@ -110,7 +112,7 @@ export default function Comment({
                   <EditButton />
                 </>
               ) : (
-                <ReplyButton />
+                <ReplyButton onClick={() => setOpenReply(!openReply)} />
               )}
             </div>
           </div>
@@ -122,6 +124,15 @@ export default function Comment({
           </div>
         </div>
       </CommentWrapper>
+      {openReply && (
+        <AddComment
+          isReply
+          replyingTo={comment.user.username}
+          username={currentUsername}
+          parentId={comment.id}
+          handleClose={() => setOpenReply(false)}
+        />
+      )}
       {comment.replies?.length > 0 && (
         <div className="replies">
           {comment.replies.map((reply) => (
