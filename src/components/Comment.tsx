@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { ScoreTicker, Avatar, ReplyButton, AvatarUsername } from ".";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { deleteComment } from "../redux/state";
-import { DeleteButton, EditButton, AddComment } from ".";
+import { DeleteButton, EditButton, AddComment, DeleteCommentModal } from ".";
 
 interface CommentProps {
   comment: CommentType;
@@ -86,6 +86,7 @@ export default function Comment({
 
   const [openReply, setOpenReply] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const isCurrentUser = useMemo(
     (): boolean => currentUsername === comment.user.username,
@@ -98,6 +99,13 @@ export default function Comment({
 
   return (
     <>
+      {openDeleteModal && (
+        <DeleteCommentModal
+          isOpen={openDeleteModal}
+          handleClose={() => setOpenDeleteModal(false)}
+          handleConfirm={() => handleDelete(isReply)}
+        />
+      )}
       <CommentWrapper isReply={isReply}>
         <ScoreTicker commentId={comment.id} score={comment.score} />
         <div className="body">
@@ -109,7 +117,7 @@ export default function Comment({
             <div className="buttons">
               {isCurrentUser ? (
                 <>
-                  <DeleteButton onClick={() => handleDelete(isReply)} />
+                  <DeleteButton onClick={() => setOpenDeleteModal(true)} />
                   <EditButton onClick={() => setOpenEdit(!openEdit)} />
                 </>
               ) : (

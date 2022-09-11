@@ -4,8 +4,9 @@ import styled, { css } from "styled-components";
 import { Icon, Icons } from ".";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  theme: "primary" | "secondary";
+  theme: "primary" | "secondary" | "tertiary" | "danger";
   content: string | ReactNode;
+  width?: string;
 }
 
 const styles = {
@@ -26,12 +27,30 @@ const styles = {
       background-color: var(--very-light-gray);
     }
   `,
+  tertiary: css`
+    background-color: var(--grayish-blue);
+    color: var(--white);
+    text-transform: uppercase;
+
+    :hover {
+      background-color: var(--dark-blue);
+    }
+  `,
+  danger: css`
+    background-color: var(--soft-red);
+    color: var(--white);
+    text-transform: uppercase;
+
+    :hover {
+      background-color: var(--soft-red-hover);
+    }
+  `,
 };
 
 const buttonColors = (theme: ButtonProps["theme"]) => styles[theme];
 
 const StyledButton = styled.button<Omit<ButtonProps, "content">>`
-  width: 80px;
+  width: ${(props) => props.width || "80px"};
   height: 40px;
   border-radius: 5px;
   display: flex;
@@ -41,7 +60,8 @@ const StyledButton = styled.button<Omit<ButtonProps, "content">>`
   border: none;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  font-weight: 600;
+  font-weight: 500;
+  font-size: 14px;
   ${(props) => buttonColors(props.theme)}
 `;
 

@@ -2,6 +2,7 @@
   --moderate-blue: hsl(238, 40%, 52%);
   --moderate-blue-hover: hsl(238, 40%, 60%);
   --soft-red: hsl(358, 79%, 66%);
+  --soft-red-hover: hsl(358, 79%, 74%);
   --light-grayish-blue: hsl(239, 57%, 85%);
   --pale-red: hsl(357, 100%, 86%);
   --dark-blue: hsl(212, 24%, 26%);
@@ -29,6 +30,7 @@ body {
   justify-content: center;
   height: auto;
   min-height: 100vh;
+  width: 100%;
 }
 
 .replies {
