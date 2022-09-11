@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <Comments />
-      <AddComment username={username} isReply={false} />
+      <AddComment username={username} />
       <div className="attribution">
         Challenge by
         <a

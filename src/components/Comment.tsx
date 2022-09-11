@@ -21,7 +21,7 @@ const CommentWrapper = styled.div<{ isReply: boolean }>`
   margin-bottom: 20px;
   background-color: var(--white);
   width: ${(props) => (props.isReply ? "600px" : "700px")};
-  height: 180px;
+  min-height: 180px;
 
   .username {
     color: var(--dark-blue);
@@ -85,6 +85,7 @@ export default function Comment({
   const dispatch = useAppDispatch();
 
   const [openReply, setOpenReply] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
 
   const isCurrentUser = useMemo(
     (): boolean => currentUsername === comment.user.username,
@@ -109,7 +110,7 @@ export default function Comment({
               {isCurrentUser ? (
                 <>
                   <DeleteButton onClick={() => handleDelete(isReply)} />
-                  <EditButton />
+                  <EditButton onClick={() => setOpenEdit(!openEdit)} />
                 </>
               ) : (
                 <ReplyButton onClick={() => setOpenReply(!openReply)} />
@@ -117,10 +118,22 @@ export default function Comment({
             </div>
           </div>
           <div className="content">
-            {comment.replyingTo && (
-              <span className="replyingTo">{`@${comment.replyingTo}`}</span>
+            {openEdit ? (
+              <AddComment
+                isEdit
+                username={currentUsername}
+                parentId={comment.id}
+                handleClose={() => setOpenEdit(false)}
+                commentContent={comment.content}
+              />
+            ) : (
+              <>
+                {comment.replyingTo && (
+                  <span className="replyingTo">{`@${comment.replyingTo}`}</span>
+                )}
+                {comment.content}
+              </>
             )}
-            {comment.content}
           </div>
         </div>
       </CommentWrapper>
