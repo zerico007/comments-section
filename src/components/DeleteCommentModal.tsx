@@ -8,6 +8,12 @@ interface ModalProps {
   reference: RefObject<HTMLDialogElement>;
 }
 
+export const openModal = (ref: RefObject<HTMLDialogElement>) => {
+  if (!ref.current) return;
+  const dialog = ref?.current as HTMLDialogElement;
+  dialog.showModal();
+};
+
 const ModalContainer = styled.dialog`
   width: 400px;
   border-radius: 8px;

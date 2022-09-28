@@ -8,3 +8,4 @@ export { default as Comments } from "./Comments";
 export { default as TextBox } from "./TextBox";
 export { default as AddComment } from "./AddComment";
 export { default as DeleteCommentModal } from "./DeleteCommentModal";
+export { openModal } from "./DeleteCommentModal";

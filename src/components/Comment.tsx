@@ -5,7 +5,13 @@ import { ScoreTicker, Avatar, ReplyButton, AvatarUsername } from ".";
 import { useAppSelector, useAppDispatch } from "../redux/hooks";
 import { deleteComment } from "../redux/state";
 import { useMobile } from "../context";
-import { DeleteButton, EditButton, AddComment, DeleteCommentModal } from ".";
+import {
+  DeleteButton,
+  EditButton,
+  AddComment,
+  DeleteCommentModal,
+  openModal,
+} from ".";
 
 interface CommentProps {
   comment: CommentType;
@@ -131,11 +137,7 @@ export default function Comment({
     dispatch(deleteComment({ isReply, id: comment.id, parentId }));
   };
 
-  const openDeleteModal = () => {
-    if (!deleteModalRef.current) return;
-    const dialog = deleteModalRef?.current as HTMLDialogElement;
-    dialog.showModal();
-  };
+  const openDeleteModal = () => openModal(deleteModalRef);
 
   return (
     <>
