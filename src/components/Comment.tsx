@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { ScoreTicker, Avatar, ReplyButton, AvatarUsername } from ".";
@@ -119,7 +119,8 @@ export default function Comment({
 
   const [openReply, setOpenReply] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+  const deleteModalRef = useRef<HTMLDialogElement>(null);
 
   const isCurrentUser = useMemo(
     (): boolean => currentUsername === comment.user.username,
@@ -130,12 +131,17 @@ export default function Comment({
     dispatch(deleteComment({ isReply, id: comment.id, parentId }));
   };
 
+  const openDeleteModal = () => {
+    if (!deleteModalRef.current) return;
+    const dialog = deleteModalRef?.current as HTMLDialogElement;
+    dialog.showModal();
+  };
+
   return (
     <>
-      {openDeleteModal && (
+      {isCurrentUser && (
         <DeleteCommentModal
-          isOpen={openDeleteModal}
-          handleClose={() => setOpenDeleteModal(false)}
+          reference={deleteModalRef}
           handleConfirm={() => handleDelete(isReply)}
         />
       )}
@@ -153,7 +159,7 @@ export default function Comment({
               <div className="buttons">
                 {isCurrentUser ? (
                   <>
-                    <DeleteButton onClick={() => setOpenDeleteModal(true)} />
+                    <DeleteButton onClick={() => openDeleteModal()} />
                     <EditButton onClick={() => setOpenEdit(!openEdit)} />
                   </>
                 ) : (
@@ -191,7 +197,7 @@ export default function Comment({
                     marginLeft: "auto",
                   }}
                 >
-                  <DeleteButton onClick={() => setOpenDeleteModal(true)} />
+                  <DeleteButton onClick={() => openDeleteModal()} />
                   <EditButton onClick={() => setOpenEdit(!openEdit)} />
                 </div>
               ) : (

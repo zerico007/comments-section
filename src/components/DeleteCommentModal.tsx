@@ -1,32 +1,29 @@
+import { RefObject } from "react";
 import styled from "styled-components";
 
 import { Button } from "./Buttons";
 
 interface ModalProps {
-  isOpen: boolean;
-  handleClose: () => void;
   handleConfirm: () => void;
+  reference: RefObject<HTMLDialogElement>;
 }
 
-const ModalBackground = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const ModalContainer = styled.dialog`
+  width: 400px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+
+  ::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
 `;
 
 const ModalBody = styled.div`
-  width: 400px;
+  width: 100%;
   height: 250px;
   background-color: var(--white);
   padding: 20px;
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
 
@@ -48,38 +45,40 @@ const ModalBody = styled.div`
   }
 `;
 
-export default function Modal({
-  isOpen,
-  handleClose,
-  handleConfirm,
-}: ModalProps) {
+export default function Modal({ handleConfirm, reference }: ModalProps) {
+  const handleClose = () => {
+    if (!reference.current) return;
+    const dialog = reference?.current as HTMLDialogElement;
+    dialog.close();
+  };
+
+  const confirmDelete = () => {
+    handleConfirm();
+    handleClose();
+  };
   return (
-    <>
-      {isOpen && (
-        <ModalBackground>
-          <ModalBody>
-            <h3>Delete Comment</h3>
-            <p>
-              Are you sure you want to delete this comment? This will remove the
-              comment and cannot be undone.
-            </p>
-            <div className="modal-buttons">
-              <Button
-                theme="tertiary"
-                content="no, cancel"
-                onClick={handleClose}
-                width="140px"
-              />
-              <Button
-                theme="danger"
-                content="yes, delete"
-                onClick={handleConfirm}
-                width="140px"
-              />
-            </div>
-          </ModalBody>
-        </ModalBackground>
-      )}
-    </>
+    <ModalContainer ref={reference} className="delete-modal">
+      <ModalBody>
+        <h3>Delete Comment</h3>
+        <p>
+          Are you sure you want to delete this comment? This will remove the
+          comment and cannot be undone.
+        </p>
+        <div className="modal-buttons">
+          <Button
+            theme="tertiary"
+            content="no, cancel"
+            onClick={handleClose}
+            width="140px"
+          />
+          <Button
+            theme="danger"
+            content="yes, delete"
+            onClick={confirmDelete}
+            width="140px"
+          />
+        </div>
+      </ModalBody>
+    </ModalContainer>
   );
 }
